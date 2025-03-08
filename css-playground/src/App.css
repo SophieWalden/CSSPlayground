@@ -1,0 +1,109 @@
+#navbar{
+
+  width: 100%;
+  height: 10vh;
+  justify-content: start;
+  align-items: center;
+  gap: 2vw;
+  display: flex;
+  padding-left: 2.5vw;
+}
+
+.navbar-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3vw;
+  height: 3vw;
+  background-color: rgb(196, 188, 188);
+  border: solid black 1px;
+  transition: all 0.25s ease-in-out;
+  z-index: 1;
+}
+
+.navbar-button:hover{
+  background-color: rgb(159, 152, 152);
+  transform: translateY(-2px);
+}
+
+.navbar-button:active{
+  background-color: rgb(121, 118, 118);
+  transform: translateY(2px);
+}
+
+.node {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  text-align: center;
+  min-width: 100px;
+  font-size: 14px;
+}
+
+#nodegraph{
+  width: 100vw;
+  height: 100vh;
+}
+
+#edit-panel{
+  width: 25vw;
+  height: 60vh;
+  background-color: rgba(0, 0, 0, 0.715);
+  border-radius: 10px;
+  font-size: 0.75vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  color: white;
+  
+  overflow-y: scroll;
+  padding-bottom: 5vh;
+  padding-top: 5vh;
+  font-family: "JetBrains Mono",monospace;
+}
+
+.hidden{
+  display: none !important;
+}
+
+.selector-pair{
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10%;
+
+}
+
+.text-input-node{
+  width: 100%;
+  border-radius: 10px;
+  background-color: rgba(128, 128, 128, 0.188);
+  color: white;
+}
+
+.options-selector{
+  background-color: rgba(30, 29, 29, 0.8);
+  color: white;
+}
+
+.colorIdentifier{ 
+  width: 2vw;
+  height: 2vw;
+  border-radius: 50%;
+}
+
+.color-picker-holder{
+  position: absolute;
+  top: 0vh;
+  left: -20vw;
+  z-index: 2;
+}
+
+.search-bar{
+  width: 80%;
+  border-radius: 10px;
+  background-color: rgba(128, 128, 128, 0.188);
+  color: white;
+}
