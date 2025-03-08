@@ -12,16 +12,37 @@ import { ReactFlow,
  } from '@xyflow/react';
 
  import { SketchPicker } from 'react-color';
+ import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
 
  import { IoAdd } from "react-icons/io5";
+ import { FaCopy } from "react-icons/fa";
  
 import '@xyflow/react/dist/style.css';
 
 function CustomNode({ data }) {
+  const [hovering, setHovering] = useState(false);
+ 
+ 
+  function getStyles(){
+    let styles = {...data.styles};
+
+    if (hovering){
+      for (let i = 0; i < Object.keys(data.styles.hoverStyles).length; i++){
+        let key = Object.keys(data.styles.hoverStyles)[i];
+
+        styles[key] = data.styles.hoverStyles[key]
+      }
+    }
+
+    return styles;
+  }
+
  
   return (
-    <div className="node" id={data.id} onClick={() => data.setActiveNode(data.id)}
-      style={data.styles}>
+    <div onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)} className="node" id={data.id} onClick={() => data.setActiveNode(data.id)}
+      style={getStyles()}>
       {data.label}
     </div>
   )
@@ -109,7 +130,6 @@ const styles = [
   { "name": "opacity", "type": "text", "default": "1" },
   { "name": "visibility", "type": "text", "default": "visible", "options": ["visible", "hidden", "collapse"] },
   { "name": "cursor", "type": "selector", "default": "auto", "options": ["alias", "all-scroll", "auto", "cell", "col-resize", "context-menu", "copy", "crosshair", "default", "e-resize", "ew-resize", "grab", "grabbing", "help", "move", "n-resize", "ne-resize", "nesw-resize", "ns-resize", "nw-resize", "nwse-resize", "no-drop", "none", "not-allowed", "pointer", "progress", "row-resize", "s-resize", "se-risze", "sw-resize", "text", "w-resize", "wait", "zoom-in", "zoom-out"] },
-  { "name": "transition", "type": "text", "default": "none" },
   { "name": "transform", "type": "text", "default": "none" },
   { "name": "alignItems", "type": "text", "default": "stretch", "options": ["flex-start", "flex-end", "center", "baseline", "stretch"] },
   { "name": "justifyContent", "type": "text", "default": "flex-start", "options": ["flex-start", "flex-end", "center", "space-between", "space-around", "space-evenly"] },
@@ -131,7 +151,7 @@ const styles = [
   { "name": "gridColumnStart", "type": "text", "default": "auto" },
   { "name": "gridColumnEnd", "type": "text", "default": "auto" },
   { "name": "gridRowStart", "type": "text", "default": "auto" },
-  { "name": "gridRowEnd", "type": "text", "default": "auto" }
+  { "name": "gridRowEnd", "type": "text", "default": "auto" },
 ];
 
 
@@ -150,7 +170,8 @@ function App() {
       newBaseStyle[style.name] = style.default;
     })
 
-
+    newBaseStyle.hoverStyles = {};
+    newBaseStyle.activeStyles = {};
     setBaseStyles(newBaseStyle)
   }, [styles])
 
@@ -187,7 +208,10 @@ function App() {
   function changeStyle(newKey, newValue){
     setNodeStyles((oldNodesStyles) => {
       let newNodeStyles = {...oldNodesStyles};
-      newNodeStyles[newKey] = newValue;
+
+      if (selectedTab == "regular") newNodeStyles[newKey] = newValue;
+      else if(selectedTab == "hover") newNodeStyles.hoverStyles[newKey] = newValue;
+      else if(selectedTab == "active") newNodeStyles.activeStyles[newKey] = newValue;
       newNodeStyles.rerenderId++;
 
       return newNodeStyles
@@ -207,7 +231,23 @@ function App() {
     })
   }, [nodeStyles.rerenderId])
 
+  const [selectedTab, setSelectedTab] = useState("regular");
+
+  function exportStyles(){
+    let exportStyle = ".style{\n"
+
+    for (let i = 0; i < Object.keys(nodeStyles).length; i++){
+      let key = Object.keys(nodeStyles)[i];
   
+
+      if (!["hoverStyles", "activeStyles", "rerenderId"].includes(key)){
+        exportStyle += `  ${key}: ${nodeStyles[key]}\n`;
+      }
+    }
+
+    exportStyle += "}"
+    navigator.clipboard.writeText(exportStyle);
+  }
 
   return (
     <div id="nodegraph">
@@ -219,11 +259,18 @@ function App() {
           <Background variant="dots" gap={12} size={1} />
           <Panel position="top-left">
             <div id="navbar">
-              <div className="navbar-button" onClick={() => addNewNode()}><IoAdd/></div>
+              <div className="navbar-button button-30" onClick={() => addNewNode()}><IoAdd/></div>
+              <div className="navbar-button button-30" onClick={() => exportStyles()}><FaCopy/></div>
             </div>
           </Panel>
           <Panel position="top-right">
             {activeNode != null && <div id="edit-panel">
+              <div id="edit-panel-tabs">
+                <div className={`${selectedTab=="regular" ? "selectedTab": ""} navbar-buttons`} onClick={() => setSelectedTab("regular") || setShowColorPicker(false)}>Regular</div>
+                <div className={`${selectedTab=="hover" ? "selectedTab": ""} navbar-buttons`} onClick={() => setSelectedTab("hover") || setShowColorPicker(false)}>Hover</div>
+                <div className={`${selectedTab=="active" ? "selectedTab": ""} navbar-buttons`} onClick={() => setSelectedTab("active") || setShowColorPicker(false)}>Active</div>
+              </div>
+
                  <input
                       className="search-bar"
                       type="text"
@@ -245,7 +292,7 @@ function App() {
                           type="text"
                           name="name"
                           onChange={(e) => changeStyle(style.name, e.target.value)}
-                          value={nodeStyles[style.name]}
+                          value={selectedTab == "regular" ? nodeStyles[style.name] : nodeStyles.hoverStyles[style.name]}
                       />
 
                      </div> 
@@ -256,7 +303,7 @@ function App() {
                          type="text"
                          name="name"
                          onChange={(e) => changeStyle(style.name, e.target.value)}
-                         value={nodeStyles[style.name]}
+                         value={selectedTab == "regular" ? nodeStyles[style.name] : nodeStyles.hoverStyles[style.name]}
                       >
                         {style.options.map((option, index) => (
                           <option key={index} className="options-selector">
@@ -269,13 +316,13 @@ function App() {
                      : style.type == "color" ?
                      
                      <div className="colorIdentifierHolder">
-                      <div style={{"backgroundColor": nodeStyles[style.name]}} className="colorIdentifier"
+                      <div style={{"backgroundColor": selectedTab == "regular" ? nodeStyles[style.name] : Object.keys(nodeStyles.hoverStyles).includes(style.name) ? nodeStyles.hoverStyles[style.name] : nodeStyles[style.name]}} className="colorIdentifier"
                         onClick={() => setShowColorPicker((oldVal) => oldVal == style.name ? null : style.name)} />
 
                       {showColorPicker == style.name && 
                       <div className="color-picker-holder">
                         <SketchPicker
-                        color={ nodeStyles[style.name] }
+                        color={ selectedTab == "regular" ? nodeStyles[style.name] : Object.keys(nodeStyles.hoverStyles).includes(style.name) ? nodeStyles.hoverStyles[style.name] : nodeStyles[style.name] }
                         onChangeComplete={ (color) => changeStyle(style.name, color.hex)}
                         />
                       </div>}

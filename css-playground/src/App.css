@@ -9,27 +9,7 @@
   padding-left: 2.5vw;
 }
 
-.navbar-button{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 3vw;
-  height: 3vw;
-  background-color: rgb(196, 188, 188);
-  border: solid black 1px;
-  transition: all 0.25s ease-in-out;
-  z-index: 1;
-}
 
-.navbar-button:hover{
-  background-color: rgb(159, 152, 152);
-  transform: translateY(-2px);
-}
-
-.navbar-button:active{
-  background-color: rgb(121, 118, 118);
-  transform: translateY(2px);
-}
 
 .node {
   padding: 10px;
@@ -38,7 +18,10 @@
   text-align: center;
   min-width: 100px;
   font-size: 14px;
+  transition: all 0.5s ease-in-out;
+  z-index: 3;
 }
+
 
 #nodegraph{
   width: 100vw;
@@ -106,4 +89,73 @@
   border-radius: 10px;
   background-color: rgba(128, 128, 128, 0.188);
   color: white;
+}
+
+.button-30 {
+  height: 5vw;
+  width: 5vw;
+  font-size: 5vw;
+  align-items: center;
+  appearance: none;
+  background-color: #FCFCFD;
+  border-radius: 4px;
+  border-width: 0;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+  box-sizing: border-box;
+  color: #36395A;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "JetBrains Mono",monospace;
+  justify-content: center;
+  line-height: 1;
+  list-style: none;
+  overflow: hidden;
+  padding-left: 16px;
+  padding-right: 16px;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transition: box-shadow .15s,transform .15s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: box-shadow,transform;
+}
+
+.button-30:focus {
+  box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+}
+
+.button-30:hover {
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+  transform: translateY(-2px);
+}
+
+.button-30:active {
+  box-shadow: #D6D6E7 0 3px 7px inset;
+  transform: translateY(2px);
+}
+
+#edit-panel-tabs{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  height: 5vh;
+  padding-bottom: 2vh;
+}
+
+.selectedTab{
+  background-color: rgba(141, 96, 96, 0.463) !important;
+}
+
+.navbar-buttons{
+  width: 30%;
+  height: 4vh;
+  background-color: rgba(122, 122, 122, 0.488);
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
